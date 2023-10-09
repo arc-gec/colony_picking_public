@@ -1,8 +1,6 @@
 import pandas as pd
 import streamlit as st
-import plotly.figure_factory as ff 
 import plotly_express as px
-import plotly.offline as pyo
 import datetime
 from barcode import Code39
 import os
