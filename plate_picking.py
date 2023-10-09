@@ -15,14 +15,9 @@ def make_plate_list(df):#Tests if there are more than 96 colonies
 	if df['No. Colonies'].sum() < 97:
 		return [df]	
 	else:
-<<<<<<< HEAD:colony_picking.py
 		pass
 		
-def generate_barcodes(df):
-=======
-		print("Still working on multiple plates")
 def generate_barcode(df, plate_type):
->>>>>>> dev:plate_picking.py
 	
 	date_time = datetime.datetime.now()
 	str_date_time = date_time.strftime("%d%m%Y%H%M%S")
