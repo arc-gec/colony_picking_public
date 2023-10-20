@@ -10,7 +10,6 @@ from barcode import Code39
 from barcode.writer import ImageWriter
 from io import BytesIO
 from PIL import Image
-import base64
 
 def rowIndex(row):
 	return row.name
