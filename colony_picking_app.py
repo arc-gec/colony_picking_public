@@ -17,7 +17,7 @@ from streamlit_helper_functions import convert_df
 
 #Global Variables. Will import these properly when I have time.
 #For dict below key is qpix and value is human
-QPIX_DICT_90 = {'A1': 'A1','B1': 'A2','C1': 'A3','D1': 'A4','E1': 'A5','F1': 'A6',
+QTREY_ROT_90 = {'A1': 'A1','B1': 'A2','C1': 'A3','D1': 'A4','E1': 'A5','F1': 'A6',
  	     'A2': 'B1', 'B2': 'B2', 'C2': 'B3', 'D2': 'B4', 'E2': 'B5', 'F2': 'B6',
  	     'A3': 'C1', 'B3': 'C2', 'C3': 'C3', 'D3': 'C4', 'E3': 'C5', 'F3': 'C6',
  	     'A4': 'D1', 'B4': 'D2', 'C4': 'D3', 'D4': 'D4', 'E4': 'D5', 'F4': 'D6',
@@ -27,7 +27,7 @@ QPIX_DICT_90 = {'A1': 'A1','B1': 'A2','C1': 'A3','D1': 'A4','E1': 'A5','F1': 'A6
              'A8': 'H1', 'B8': 'H2', 'C8': 'H3', 'D8': 'H4', 'E8': 'H5', 'F8': 'H6'
 }
 
-QPIX_DICT_180 =  {'A1': 'H1', 'B1': 'H2', 'C1': 'H3', 'D1': 'H4', 'E1': 'H5', 'F1': 'H6', 
+QTREY_ROT_180 =  {'A1': 'H1', 'B1': 'H2', 'C1': 'H3', 'D1': 'H4', 'E1': 'H5', 'F1': 'H6', 
 		'A2': 'G1', 'B2': 'G2', 'C2': 'G3', 'D2': 'G4', 'E2': 'G5', 'F2': 'G6', 
 		'A3': 'F1', 'B3': 'F2', 'C3': 'F3', 'D3': 'F4', 'E3': 'F5', 'F3': 'F6', 
 		'A4': 'E1', 'B4': 'E2', 'C4': 'E3', 'D4': 'E4', 'E4': 'E5', 'F4': 'E6', 
@@ -83,8 +83,13 @@ def main():
 			df_list = make_plate_list(df)
 			for dframe in df_list:
 				df2 = generate_barcode(dframe, plate_type = 'qtrey')
-				df2_html = df2.to_html(escape=False, formatters = {'Source Agar Plate Barcode_machine':convert_images_html})
-				st.write(df2_html, unsafe_allow_html=True)
+				df2_html = df2.to_html(escape=False, formatters = {'Source Agar Plate Barcode_image_path':convert_images_html})
+				columns = ['Name', 'Source Agar Plate Name', 'Source Agar Plate No.', 'Source Well', 'No. Colonies', 
+					'Source Agar Plate Barcode', 'Destination 96 Plate Barcode'
+					]
+				df2_view = df2[columns]
+				st.write(df2_view)
+				#st.markdown(df2_html, unsafe_allow_html=True)
 			st.download_button(
 			label = "Download qtrey input as CSV",
 			data = convert_df(df2),
@@ -109,10 +114,19 @@ def main():
 				st.image(i, caption='Destination Plate Barcode')
 				st.download_button('Download plate barcode',i, key=i, mime="image/jpeg") 
 
+		
+		qpix_orientation = st.selectbox(
+			"Please Select QTrey plate orientation. Please do not change from ROT_90 unless you know what you are doing ",
+			("ROT_90", "ROT_180"),
+			key = 'qtrey orientation')
+		orientation = QTREY_ROT_90				 
+		if qpix_orientation == "ROT_180":
+			orientation = QTREY_ROT_180
+		
 		upload_file2 = st.file_uploader(label="Please Upload Qpix qtrey picking output", key=3)
 		if upload_file2 is not None:
 			df3 = pd.read_csv(upload_file2, header=6)
-			df3 = convert_qpix_wells(df3, QPIX_DICT_180)
+			df3 = convert_qpix_wells(df3, orientation)
 			st.write(df3)
 
 			st.download_button(

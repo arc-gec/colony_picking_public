@@ -25,7 +25,7 @@ def make_plate_list(df):#Tests if there are more than 96 colonies
 
 # Converting links to html tags
 def convert_images_html(path_to_image):
-    return f'<img src=path_to_image width = 60 >'
+	return f'<img src={path_to_image} width = 60 >'
 
 def machine_barcode(human_bc: str):
 	image_path = os.getcwd()+'/barcode_images/'+human_bc+'.jpg'
